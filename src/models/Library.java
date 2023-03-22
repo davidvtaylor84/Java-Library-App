@@ -1,12 +1,11 @@
 package models;
 
-import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
-
-import javax.swing.plaf.synth.SynthOptionPaneUI;
-import java.io.Console;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Scanner;
 import java.util.stream.Collectors;
 
 public class Library {
@@ -218,7 +217,7 @@ public class Library {
         int input = scanner.nextInt();
         switch (input) {
             case 1:
-                checkoutBook();
+                searchTitles();
                 break;
             case 2:
                 addBookToCollection();
@@ -227,7 +226,7 @@ public class Library {
                 listAll();
                 break;
             case 4:
-                staffList();
+                overdueBooks();
                 break;
             case 5:
                 deleteBook();
@@ -261,18 +260,26 @@ public class Library {
         System.out.print("SUMMARY: ");
         String summary = scanner.nextLine();
         System.out.print("NO OF COPIES: ");
-        int noOfCopies = scanner.nextInt();
+        String noOfCopies = scanner.nextLine();
         boolean checkedOut = false;
-        bookCollection.add(new Book(title, surname, firstname, isbn, publisher, checkedOut, noOfCopies, summary));
         System.out.println("");
-        System.out.println(bookCollection.get(bookCollection.size()-1));
-        System.out.print("Are all these details correct (y/n): ");
-        String correct = scanner.nextLine();
-        if(correct.equals("y")){
+        System.out.println("ISBN: "+ isbn);
+        System.out.println("TITLE: "+title);
+        System.out.println("AUTHOR SURNAME: "+surname);
+        System.out.println("AUTHOR FIRSTNAME: "+firstname);
+        System.out.println("PUBLISHER: "+publisher);
+        System.out.println("SUMMARY: "+summary);
+        System.out.println("NO OF COPIES: "+noOfCopies);
+        System.out.println(" ");
+        System.out.println("Are all these details correct (y/n): ");
+        String areTheseCorrect = scanner.nextLine();
+        if(areTheseCorrect.equals("y")){
+            bookCollection.add(new Book(title, surname, firstname, isbn, publisher, checkedOut, Integer.parseInt(noOfCopies), summary));
+            System.out.println("Book has been added");
             bookCollection();
         } else {
-            bookCollection.remove(bookCollection.get(bookCollection.size()-1));
-            addBookToCollection();
+            System.out.println("Book has not been added");
+            bookCollection();
         }
     }
 
@@ -332,6 +339,7 @@ public class Library {
                     bookCollection.remove(book);
                     System.out.println("");
                     System.out.println("DELETION CONFIRMED");
+                    bookCollection();
                 } else {
                     bookCollection();
                 }
@@ -345,11 +353,80 @@ public class Library {
         }
     }
 
+    public void searchTitles(){
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("SEARCH TITLES");
+        System.out.println("----------------------");
+        System.out.println("1. Search by ISBN");
+        System.out.println("2. Search by title");
+        System.out.println("3. Search by author");
+        System.out.println("4. Search by publisher");
+        System.out.print("Please select option number or q to quit: ");
+        String option = scanner.nextLine();
+        if(option.equals("1")){
+            System.out.print("ENTER ISBN: ");
+            String isbn = scanner.nextLine();
+            isbnSearch(isbn);
+        } else if (option.equals("2")) {
+            System.out.print("ENTER TITLE: ");
+            String name = scanner.nextLine();
+            bookTitleSearch(name);
+        } else if(option.equals("3")){
+            System.out.print("ENTER AUTHOR SURNAME: ");
+            String author = scanner.nextLine();
+            authorNameSearch(author);
+        } else if (option.equals("4")) {
+            System.out.println("ENTER PUBLISHER: ");
+            String publisher = scanner.nextLine();
+            publisherSearch(publisher);
+        } else {
+            bookCollection();
+        }
+    }
 
-//            System.out.println("4. Add Staff Login");
-//        System.out.println("Search titles");
-//        System.out.println("Delete books");
-//        System.out.println("Update book");
-//        System.out.println("Display all titles");
-//        System.out.println("List overdue books");
+    public void isbnSearch(String isbn){
+        List<Book> isbnList = bookCollection.stream()
+                .filter(book -> isbn.equals(book.getIsbn()))
+                .collect(Collectors.toList());
+        isbnList.forEach(System.out::println);
+        searchTitles();
+    }
+
+    public void bookTitleSearch(String title){
+        List<Book> titleList = bookCollection.stream()
+                .filter(book -> title.equals(book.getTitle()))
+                .collect(Collectors.toList());
+        titleList.forEach(System.out::println);
+        searchTitles();
+    }
+
+    public void authorNameSearch(String name){
+        List<Book> authorList = bookCollection.stream()
+                .filter(book -> name.equals(book.getAuthorSurname()))
+                .collect(Collectors.toList());
+        authorList.forEach(System.out::println);
+        searchTitles();
+    }
+
+    public void publisherSearch(String publisher){
+        List<Book> publisherList = bookCollection.stream()
+                .filter(book -> publisher.equals(book.getPublisher()))
+                .collect(Collectors.toList());
+        publisherList.forEach(System.out::println);
+        searchTitles();
+    }
+
+    public void overdueBooks(){
+        System.out.println("OVERDUE TITLES");
+        System.out.println("--------------------");
+        LocalDate today = LocalDate.now();
+        for(Book book : bookCollection){
+            LocalDate dueDate = LocalDate.parse(book.getDueBack());
+            if(dueDate.isBefore(today)){
+                book.loanHistory();
+            }
+        }
+        bookCollection();
+    }
+
 }

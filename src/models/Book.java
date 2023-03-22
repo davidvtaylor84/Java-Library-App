@@ -127,7 +127,7 @@ public class Book {
         for (Map.Entry<String, Member> entry : loanHistory.entrySet()) {
             String key = entry.getKey();
             Member member = entry.getValue();
-            return "Date borrowed: "+key+"\nMember ID: "+member.getLibraryID()+"\nMember Name: "+member.getSurname()+", "+member.getFirstName();
+            return "Date borrowed: "+key+"\nMember ID: "+member.getLibraryID()+"\nMember Name: "+member.getSurname()+", "+member.getFirstName()+"\nEMAIL: "+member.getEmail()+"\n";
         }
         return null;
     }
