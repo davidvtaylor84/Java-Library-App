@@ -1,11 +1,10 @@
 package models;
 
-import java.time.LocalDate;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Library {
@@ -84,11 +83,11 @@ public class Library {
         System.out.println("");
         System.out.println("FAR SKY 11 SCIENCE-FICTION LIBRARY");
         System.out.println("----------------------------------------------------");
-        System.out.println("1. Checkout book");
-        System.out.println("2. Book collection");
+        System.out.println("1. Checkout Book");
+        System.out.println("2. Library Collection");
         System.out.println("3. Add New Member");
         System.out.println("4. Staff List");
-        System.out.println("5. Return books");
+        System.out.println("5. Return Books");
         System.out.println("6. Logout");
         System.out.println("----------------------------------------------------");
         System.out.print("Please select a number from the above options:");
@@ -416,15 +415,42 @@ public class Library {
         searchTitles();
     }
 
-    public void overdueBooks(){
+//    public void overdueBooks(){
+//        System.out.println("OVERDUE TITLES");
+//        System.out.println("--------------------");
+////        LocalDate todayDate = LocalDate.now();
+////        DateTimeFormatter dtf = DateTimeFormatter.ISO_LOCAL_DATE;
+////        LocalDate today = LocalDate.parse(todayDate.format(dtf));
+//        Instant today = ZonedDateTime.now().toInstant();
+//        for(Book book : bookCollection){
+//            //                Date dueDateParser= new SimpleDateFormat("yyyy-MM-dd", DateTimeFormatter.ofPattern("yyyy")).parse(book.getDueBack());
+//            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+////                Date dueDate = Date.parse(book.getDueBack());
+//            LocalDateTime dateTime = LocalDateTime.parse(book.getDueBack(), formatter);
+//            Instant dueDate = dateTime.toInstant(ZoneId.systemDefault().getRules().getOffset(dateTime));
+//            if(dueDate.isBefore(today)) {
+//                book.loanHistory();
+//            }
+//        }
+//        bookCollection();
+//    }
+
+    public void overdueBooks() {
         System.out.println("OVERDUE TITLES");
         System.out.println("--------------------");
-        LocalDate today = LocalDate.now();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        LocalDate localDate  = LocalDate.now();
+        Date today = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
         for(Book book : bookCollection){
-            LocalDate dueDate = LocalDate.parse(book.getDueBack());
-            if(dueDate.isBefore(today)){
-                book.loanHistory();
+            try{
+                Date dueDate = formatter.parse(book.getDueBack());
+                if(dueDate.before(today)) {
+                    book.loanHistory();
+                }
+            } catch (ParseException e){
+                e.printStackTrace();
             }
+
         }
         bookCollection();
     }
