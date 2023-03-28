@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 
 public class Member {
 
@@ -113,5 +114,13 @@ public class Member {
             list.append(checkedOutBook.getIsbn() + " | " + checkedOutBook.getTitle() + " | "+checkedOutBook.getAuthorSurname()+" | Due back on " + checkedOutBook.getDueBack() + "\n");
         }
         return list.toString();
+    }
+
+    public double getFines() {
+        return fines;
+    }
+
+    public void setFines(double fines) {
+        this.fines+=fines;
     }
 }

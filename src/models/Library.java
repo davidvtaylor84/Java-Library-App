@@ -1,9 +1,6 @@
 package models;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.*;
-import java.time.chrono.ChronoLocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -126,6 +123,49 @@ public class Library {
     }
 
     private void addNewMember() {
+        System.out.println(" ");
+        System.out.println("ADD NEW MEMBER");
+        System.out.println("--------------------");
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Add new member?(y/n)");
+        String input = scanner.nextLine();
+        if(input.equals("y")){
+            System.out.print("First name: ");
+            String firstName = scanner.nextLine();
+            System.out.print("Surname: ");
+            String surname = scanner.nextLine();
+            System.out.print("Date of Birth (format dd/mm/yyyy): ");
+            String dob = scanner.nextLine();
+            System.out.print("Address: ");
+            String address = scanner.nextLine();
+            System.out.print("Postcode: ");
+            String postcode = scanner.nextLine();
+            System.out.print("email: ");
+            String email = scanner.nextLine();
+            System.out.print("Notes: ");
+            String notes = scanner.nextLine();
+            System.out.println("--------------------------------");
+            System.out.print("Is the above information correct?(y/n)");
+            String correct = scanner.nextLine();
+            if(correct.equals("y")){
+                String libraryId = libraryIdGenerator();
+                members.add(new Member(firstName, surname, dob, address, postcode, email, libraryId, notes));
+                System.out.println(members.get(members.size()-1));
+                System.out.println(" ");
+                System.out.print("Press any key to exit: ");
+                String exit = scanner.nextLine();
+                if(exit.equals("q")){
+                    optionPage();
+                } else {
+                    optionPage();
+                }
+            } else {
+                addNewMember();
+            }
+
+        } else {
+            optionPage();
+        }
     }
 
     private void checkoutBook() {
@@ -179,6 +219,7 @@ public class Library {
                 }
             } else {
                 System.out.println("Member ID not recognised");
+                optionPage();
             }
         }}
     }
@@ -416,28 +457,8 @@ public class Library {
         searchTitles();
     }
 
-//    public void overdueBooks(){
-//        System.out.println("OVERDUE TITLES");
-//        System.out.println("--------------------");
-////        LocalDate todayDate = LocalDate.now();
-////        DateTimeFormatter dtf = DateTimeFormatter.ISO_LOCAL_DATE;
-////        LocalDate today = LocalDate.parse(todayDate.format(dtf));
-//        Instant today = ZonedDateTime.now().toInstant();
-//        for(Book book : bookCollection){
-//            //                Date dueDateParser= new SimpleDateFormat("yyyy-MM-dd", DateTimeFormatter.ofPattern("yyyy")).parse(book.getDueBack());
-//            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-////                Date dueDate = Date.parse(book.getDueBack());
-//            LocalDateTime dateTime = LocalDateTime.parse(book.getDueBack(), formatter);
-//            Instant dueDate = dateTime.toInstant(ZoneId.systemDefault().getRules().getOffset(dateTime));
-//            if(dueDate.isBefore(today)) {
-//                book.loanHistory();
-//            }
-//        }
-//        bookCollection();
-//    }
-
     public void overdueBooks() {
-        System.out.println(" ");
+        System.out.println("--------------------");
         System.out.println("OVERDUE TITLES");
         System.out.println("--------------------");
         DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE;
@@ -447,11 +468,37 @@ public class Library {
                 LocalDate dueDate = LocalDate.parse(book.getDueBack(), formatter);
                 if (today.isAfter(dueDate)) {
                     System.out.println("Title: "+book.getTitle()+"\nISBN: "+book.getIsbn());
+                    for(Member member : members){
+                        if(member.listOfCheckedOutBooks().contains(book.getIsbn())){
+                            member.setFines(fineCalculator(dueDate, today));
+                        }
+                    }
                     System.out.println(book.loanHistory());
                 }
             }
         }
-        bookCollection();
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Press any key to exit: ");
+        String input = scanner.nextLine();
+        if(input.equals("q")){
+            bookCollection();
+        } else {
+            bookCollection();
+        }
     }
+
+    public String libraryIdGenerator(){
+        Random rnd = new Random();
+        int number = rnd.nextInt(99999999);
+        return String.format("%08d", number);
+    }
+
+    public double fineCalculator(LocalDate dueDate, LocalDate today){
+        Period period = Period.between(dueDate, today);
+        int days = period.getDays();
+        return 1.5 * days;
+    }
+
+
 
 }
