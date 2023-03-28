@@ -3,6 +3,7 @@ package models;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.*;
+import java.time.chrono.ChronoLocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -436,21 +437,19 @@ public class Library {
 //    }
 
     public void overdueBooks() {
+        System.out.println(" ");
         System.out.println("OVERDUE TITLES");
         System.out.println("--------------------");
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        LocalDate localDate  = LocalDate.now();
-        Date today = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE;
+        LocalDate today  = LocalDate.now();
         for(Book book : bookCollection){
-            try{
-                Date dueDate = formatter.parse(book.getDueBack());
-                if(dueDate.before(today)) {
-                    book.loanHistory();
+            if(book.getDueBack() != null) {
+                LocalDate dueDate = LocalDate.parse(book.getDueBack(), formatter);
+                if (today.isAfter(dueDate)) {
+                    System.out.println("Title: "+book.getTitle()+"\nISBN: "+book.getIsbn());
+                    System.out.println(book.loanHistory());
                 }
-            } catch (ParseException e){
-                e.printStackTrace();
             }
-
         }
         bookCollection();
     }

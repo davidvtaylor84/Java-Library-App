@@ -19,6 +19,18 @@ public class LibraryApp {
         Member donovan = new Member("Donovan", "Cleary", "21/02/1984", "123 Fake Street, Edinburgh", "EH7 8HY", "ghosthorse@gmail.com", "13006838", "Customer has difficulty walking. May need assistance getting to toilet on first floor.");
         Member geena = new Member("Geena", "Davis", "23/07/1978", "42 Hellmouth Way, Glasgow", "GY7 8KJ", "meandyouandhimandher@yahoo.co.uk", "13449087", "It really is THAT Geena Davis from the movies.");
 
+        book1.setDueBack("2023-01-22");
+        book2.setDueBack("2022-12-10");
+
+        book1.setCheckedOut(true);
+        book2.setCheckedOut(true);
+
+        book1.addLoanHistory("2023-01-22", geena);
+        book2.addLoanHistory("2022-12-10", donovan);
+
+        geena.addCheckedOutBooks(book1);
+        donovan.addCheckedOutBooks(book2);
+
         library.addBook(book1);
         library.addBook(book2);
         library.addBook(book3);
