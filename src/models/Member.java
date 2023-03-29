@@ -81,6 +81,10 @@ public class Member {
         this.libraryID = libraryID;
     }
 
+    public List<Book> getCheckedOutBooks() {
+        return checkedOutBooks;
+    }
+
     public void addCheckedOutBooks(Book book) {
         this.checkedOutBooks.add(book);
     }

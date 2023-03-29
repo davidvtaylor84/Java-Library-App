@@ -1,5 +1,8 @@
 package models;
 
+import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
+
+import javax.swing.plaf.synth.SynthOptionPaneUI;
 import java.math.BigDecimal;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
@@ -194,6 +197,29 @@ public class Library {
     }
 
     private void returnBooks() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println(" ");
+        System.out.println("--------------------");
+        System.out.println("RETURN BOOKS");
+        System.out.println("--------------------");
+        while(true){
+            System.out.print("Enter Book ISBN or q to quit: ");
+            String isbn = scanner.nextLine();
+            if(isbn.equals("q")){
+                bookCollection();
+                break;
+            }
+            for(Book book : bookCollection){
+                if(isbn.equals(book.getIsbn())){
+                    book.setCheckedOut(false);
+                    for(Member member : members){
+                        member.getCheckedOutBooks().remove(book);
+                    }
+                } else {
+                    System.out.println("ISBN not recognised");
+                }
+            }
+        }
     }
 
     private void staffList() {
