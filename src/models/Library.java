@@ -200,6 +200,9 @@ public class Library {
         for (Member member : members) {
                 if (id.equals(member.getLibraryID())) {
                     System.out.println(member);
+                    if(member.getFines()>=3.0){
+                        payFines(member);
+                    }
                     while (true) {
                         System.out.println(" ");
                         System.out.print("Checkout Book (y/n): ");
@@ -261,7 +264,7 @@ public class Library {
     }
 
     public void bookCollection(){
-        System.out.println("");
+        System.out.println("---------------------------------------------------");
         System.out.println("COLLECTION");
         System.out.println("----------------------------------------------------");
         System.out.println("1. Search Titles");
@@ -486,11 +489,11 @@ public class Library {
                 LocalDate dueDate = LocalDate.parse(book.getDueBack(), formatter);
                 if (today.isAfter(dueDate)) {
                     System.out.println("Title: "+book.getTitle()+"\nISBN: "+book.getIsbn());
-                    for(Member member : members){
-                        if(member.listOfCheckedOutBooks().contains(book.getIsbn())){
-                            member.setFines(fineCalculator(dueDate, today));
-                        }
-                    }
+//                    for(Member member : members){
+//                        if(member.listOfCheckedOutBooks().contains(book.getIsbn())){
+//                            member.setFines(fineCalculator(dueDate, today));
+//                        }
+//                    }
                     System.out.println(book.loanHistory());
                 }
             }
@@ -517,6 +520,37 @@ public class Library {
         return 1.5 * days;
     }
 
+    public void overdueFine() {
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE;
+        LocalDate today = LocalDate.now();
+        for (Book book : bookCollection) {
+            if (book.getDueBack() != null) {
+                LocalDate dueDate = LocalDate.parse(book.getDueBack(), formatter);
+                if (today.isAfter(dueDate)) {
+                    for (Member member : members) {
+                        if (member.listOfCheckedOutBooks().contains(book.getIsbn())) {
+                            member.setFines(fineCalculator(dueDate, today));
+                        }
+                    }
+                }
+            }
+        }
+    }
 
+    public void payFines(Member member){
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Member cannot checkout book unless outstanding fees are under £3");
+        System.out.print("Pay outstanding fees?(y/n)");
+        String input = scanner.nextLine();
+        if(input.equals("y")){
+            System.out.print("Current balance is £"+member.getFines()+". Please enter amount paid today: ");
+            double amount = scanner.nextDouble();
+            member.setFines(member.getFines()-amount);
+            System.out.println("Current balance is now "+member.getFines());
+            checkoutBook();
+        } else {
+            optionPage();
+        }
+    }
 
 }

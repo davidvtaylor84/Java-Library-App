@@ -45,6 +45,7 @@ public class LibraryApp {
         library.addMember(geena);
 
         if(library.login()){
+            library.overdueFine();
             library.optionPage();
         } else {
             library.login();
