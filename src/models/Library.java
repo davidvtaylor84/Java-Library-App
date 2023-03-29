@@ -26,15 +26,15 @@ public class Library {
         return bookCollection;
     }
 
-    public void addBook(Book book){
+    public void addBook(Book book) {
         bookCollection.add(book);
     }
 
-    public void addMember(Member member){
+    public void addMember(Member member) {
         members.add(member);
     }
 
-    public void addStaffMember(Staff staff){
+    public void addStaffMember(Staff staff) {
         libraryStaff.add(staff);
     }
 
@@ -58,22 +58,22 @@ public class Library {
         this.members = members;
     }
 
-    public boolean login(){
+    public boolean login() {
         boolean loginSuccess = false;
-        while (!loginSuccess){
+        while (!loginSuccess) {
             Scanner scanner = new Scanner(System.in);
             System.out.print("STAFF ID:");
             String inputID = scanner.nextLine();
             System.out.print("PASSWORD:");
             String inputPassword = scanner.nextLine();
             System.out.println("");
-            for(Staff staff : libraryStaff){
-                if(staff.getStaffID().equals(inputID) && staff.getStaffPassword().equals(inputPassword)){
-                    loginSuccess=true;
+            for (Staff staff : libraryStaff) {
+                if (staff.getStaffID().equals(inputID) && staff.getStaffPassword().equals(inputPassword)) {
+                    loginSuccess = true;
                     break;
                 }
             }
-            if(!loginSuccess){
+            if (!loginSuccess) {
                 System.out.println("Incorrect LOGIN or PASSWORD. Please try again...");
                 System.out.println("");
             }
@@ -81,16 +81,19 @@ public class Library {
         return loginSuccess;
     }
 
-    public void optionPage(){
-        System.out.println("");
-        System.out.println("FAR SKY 11 SCIENCE-FICTION LIBRARY");
-        System.out.println("----------------------------------------------------");
+    public void optionPage() {
+        System.out.println("-----------------------------------------------------");
+        System.out.println("-                                                   -");
+        System.out.println("-         FAR SKY 11 SCIENCE-FICTION LIBRARY        -");
+        System.out.println("-                                                   -");
+        System.out.println("-----------------------------------------------------");
         System.out.println("1. Checkout Book");
         System.out.println("2. Library Collection");
         System.out.println("3. Add New Member");
         System.out.println("4. Edit Member Details");
         System.out.println("5. Return Books");
-        System.out.println("6. Logout");
+        System.out.println("6. List Staff");
+        System.out.println("7. Logout");
         System.out.println("----------------------------------------------------");
         System.out.print("Please select a number from the above options:");
         Scanner scanner = new Scanner(System.in);
@@ -112,11 +115,31 @@ public class Library {
                 returnBooks();
                 break;
             case 6:
+                listStaff();
+                break;
+            case 7:
                 login();
                 break;
             default:
                 System.out.println("Please select a number on the list of options");
                 optionPage();
+        }
+    }
+
+    private void listStaff() {
+        System.out.println(" ");
+        System.out.println("-------------------");
+        System.out.println("STAFF LIST");
+        System.out.println("--------------------");
+        for (Staff staff : libraryStaff) {
+            System.out.println(staff);
+        }
+        System.out.println(" ");
+        System.out.print("To exit, press q: ");
+        Scanner scanner = new Scanner(System.in);
+        String quit = scanner.nextLine();
+        if (quit.equals("q")) {
+            optionPage();
         }
     }
 
@@ -133,9 +156,9 @@ public class Library {
                 optionPage();
             } else {
                 int convertedSelection = Integer.parseInt(memberSelection);
-                for(Member member : members){
-                    if(convertedSelection <= members.size()+1 && convertedSelection>0){
-                        editMemberDetails2(members.get(convertedSelection-1).getLibraryID());
+                for (Member member : members) {
+                    if (convertedSelection <= members.size() + 1 && convertedSelection > 0) {
+                        editMemberDetails2(members.get(convertedSelection - 1).getLibraryID());
                     } else {
                         System.out.println("Member ID not recognised");
                     }
@@ -147,39 +170,39 @@ public class Library {
     }
 
     private void editMemberDetails2(String nameOrId) {
-        for(Member member : members){
-            if(nameOrId.equals(member.getLibraryID())){
+        for (Member member : members) {
+            if (nameOrId.equals(member.getLibraryID())) {
                 Scanner scanner = new Scanner(System.in);
-                while(true){
+                while (true) {
                     System.out.println("What do you wish to edit or q to quit?");
                     System.out.println("1. Surname, 2. First Name, 3. Address, 4. Postcode, 5. Email, 6. Notes: ");
                     String input = scanner.nextLine();
-                    if(input.equals("1")){
+                    if (input.equals("1")) {
                         System.out.print("Surname: ");
                         String surname = scanner.nextLine();
                         member.setSurname(surname);
                         System.out.println(member);
-                    } else if (input.equals("2")){
+                    } else if (input.equals("2")) {
                         System.out.print("First Name: ");
                         String firstname = scanner.nextLine();
                         member.setFirstName(firstname);
                         System.out.println(member);
-                    } else if(input.equals("3")){
+                    } else if (input.equals("3")) {
                         System.out.print("Address: ");
                         String address = scanner.nextLine();
                         member.setAddress(address);
                         System.out.println(member);
-                    } else if(input.equals("4")){
+                    } else if (input.equals("4")) {
                         System.out.print("Postcode: ");
                         String postcode = scanner.nextLine();
                         member.setPostcode(postcode);
                         System.out.println(member);
-                    } else if(input.equals("5")){
+                    } else if (input.equals("5")) {
                         System.out.print("Email: ");
                         String email = scanner.nextLine();
                         member.setEmail(email);
                         System.out.println(member);
-                    } else if(input.equals("6")){
+                    } else if (input.equals("6")) {
                         System.out.print("Notes: ");
                         String notes = scanner.nextLine();
                         member.setNotes(notes);
@@ -202,22 +225,30 @@ public class Library {
         System.out.println("--------------------");
         System.out.println("RETURN BOOKS");
         System.out.println("--------------------");
-        while(true){
+        while (true) {
             System.out.print("Enter Book ISBN or q to quit: ");
             String isbn = scanner.nextLine();
-            if(isbn.equals("q")){
-                bookCollection();
+            if (isbn.equals("q")) {
+                optionPage();
                 break;
             }
-            for(Book book : bookCollection){
-                if(isbn.equals(book.getIsbn())){
+            boolean check = false;
+            for (Book book : bookCollection) {
+                if (isbn.equals(book.getIsbn())) {
                     book.setCheckedOut(false);
-                    for(Member member : members){
-                        member.getCheckedOutBooks().remove(book);
+                    for (Member member : members) {
+                        if (member.getCheckedOutBooks().contains(book)) {
+                            member.getCheckedOutBooks().remove(book);
+                            System.out.println(member);
+                            System.out.println("Book Successfully Returned");
+                            check = true;
+                        }
                     }
-                } else {
-                    System.out.println("ISBN not recognised");
                 }
+            }
+            if (!check) {
+                System.out.println(" ");
+                System.out.println("ISBN not recognised");
             }
         }
     }
@@ -227,12 +258,14 @@ public class Library {
 
     private void addNewMember() {
         System.out.println(" ");
+        System.out.println("--------------------");
         System.out.println("ADD NEW MEMBER");
         System.out.println("--------------------");
         Scanner scanner = new Scanner(System.in);
         System.out.print("Add new member?(y/n)");
         String input = scanner.nextLine();
-        if(input.equals("y")){
+        if (input.equals("y")) {
+            System.out.println(" ");
             System.out.print("First name: ");
             String firstName = scanner.nextLine();
             System.out.print("Surname: ");
@@ -250,14 +283,14 @@ public class Library {
             System.out.println("--------------------------------");
             System.out.print("Is the above information correct?(y/n)");
             String correct = scanner.nextLine();
-            if(correct.equals("y")){
+            if (correct.equals("y")) {
                 String libraryId = libraryIdGenerator();
                 members.add(new Member(firstName, surname, dob, address, postcode, email, libraryId, notes));
-                System.out.println(members.get(members.size()-1));
+                System.out.println(members.get(members.size() - 1));
                 System.out.println(" ");
                 System.out.print("Press any key to exit: ");
                 String exit = scanner.nextLine();
-                if(exit.equals("q")){
+                if (exit.equals("q")) {
                     optionPage();
                 } else {
                     optionPage();
@@ -273,86 +306,90 @@ public class Library {
 
     private void checkoutBook() {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("");
+        System.out.println(" ");
+        System.out.println("---------------------------");
+        System.out.println("CHECKOUT TITLE");
+        System.out.println("---------------------------");
         System.out.print("Input Member ID:");
         String nameOrId = scanner.nextLine();
         if (nameOrId.equals("?")) {
             memberSearch();
-            System.out.print("Input Number Selection: ");
+            System.out.print("Input ID Number: ");
             String memberSelection = scanner.nextLine();
             if (memberSelection.equals("q")) {
                 optionPage();
             } else {
-                int convertedSelection = Integer.parseInt(memberSelection);
-                for(Member member : members){
-                    if(convertedSelection <= members.size()+1 && convertedSelection>0){
-                        checkout2(members.get(convertedSelection-1).getLibraryID());
-                    } else {
-                        System.out.println("Member ID not recognised");
+                boolean check = false;
+                for (Member member : members) {
+                    if (member.getLibraryID().equals(memberSelection)) {
+                        check = true;
+                        checkout2(member);
                     }
+                }
+                if (!check) {
+                    System.out.println("Member ID not recognised");
                 }
             }
         } else {
-            checkout2(nameOrId);
+            for (Member member : members) {
+                if (member.getLibraryID().equals(nameOrId)) {
+                    checkout2(member);
+                }
+            }
         }
     }
 
 
-    public void checkout2(String id){
+    public void checkout2(Member member) {
         Scanner scanner = new Scanner(System.in);
-        for (Member member : members) {
-                if (id.equals(member.getLibraryID())) {
-                    System.out.println(member);
-                    if(member.getFines()>=3.0){
-                        payFines(member);
-                    }
-                    while (true) {
-                        System.out.println(" ");
-                        System.out.print("Checkout Book (y/n): ");
-                        String checkoutYorN = scanner.nextLine();
-                        if (checkoutYorN.equals("y")) {
-                            System.out.print("Enter ISBN or Q to quit: ");
-                            String isbn = scanner.nextLine();
-                            if (isbn.equals("Q")) {
-                                optionPage();
-                                break;
-                            }
-                            for (Book book : bookCollection) {
-                                if (isbn.equals(book.getIsbn())) {
-                                    if (!book.isCheckedOut()) {
-                                        LocalDate today = LocalDate.now();
-                                        LocalDate twoWeekLoan = today.plusDays(14);
-                                        DateTimeFormatter dtf = DateTimeFormatter.ISO_LOCAL_DATE;
-                                        member.addCheckedOutBooks(book);
-                                        book.setDueBack(twoWeekLoan.format(dtf));
-                                        book.setCheckedOut(true);
-                                        book.addLoanHistory(today.format(dtf), member);
-                                        System.out.println("");
-                                        System.out.println(member);
-                                    } else {
-                                        System.out.println("BOOK IS ALREADY CHECKED OUT");
-                                        for(Book copy : bookCollection){
-                                            if(isbn.equals(copy.getIsbn())){
-                                                System.out.println("Due back on "+copy.getDueBack());
-                                                System.out.println("__________________________________");
-                                            }
-                                        }
-                                        checkout2(member.getLibraryID());
-                                    }
+//        for (Member member : members) {
+//                if (id.equals(member.getLibraryID())) {
+        System.out.println(member);
+        if (member.getFines() >= 3.0) {
+            payFines(member);
+        }
+        while (true) {
+            System.out.println(" ");
+            System.out.print("Checkout Book (y/n): ");
+            String checkoutYorN = scanner.nextLine();
+            if (checkoutYorN.equals("y")) {
+                System.out.print("Enter ISBN or Q to quit: ");
+                String isbn = scanner.nextLine();
+                if (isbn.equals("Q")) {
+                    optionPage();
+                    break;
+                }
+                for (Book book : bookCollection) {
+                    if (isbn.equals(book.getIsbn())) {
+                        if (!book.isCheckedOut()) {
+                            LocalDate today = LocalDate.now();
+                            LocalDate twoWeekLoan = today.plusDays(14);
+                            DateTimeFormatter dtf = DateTimeFormatter.ISO_LOCAL_DATE;
+                            member.addCheckedOutBooks(book);
+                            book.setDueBack(twoWeekLoan.format(dtf));
+                            book.setCheckedOut(true);
+                            book.addLoanHistory(today.format(dtf), member);
+                            System.out.println("");
+                            System.out.println(member);
+                        } else {
+                            System.out.println("BOOK IS ALREADY CHECKED OUT");
+                            for (Book copy : bookCollection) {
+                                if (isbn.equals(copy.getIsbn())) {
+                                    System.out.println("Due back on " + copy.getDueBack());
+                                    System.out.println("__________________________________");
                                 }
                             }
-                        } else {
-                            System.out.println("ISBN not recognised");
-                            optionPage();
-                            break;
+                            checkout2(member);
                         }
                     }
-                } else {
-                    System.out.println("Member ID not recognised");
-                    optionPage();
                 }
+            } else {
+                System.out.println("ISBN not recognised");
+                optionPage();
+                break;
             }
         }
+    }
 
 
     public void memberSearch(){
@@ -364,7 +401,7 @@ public class Library {
         for(int i = 0; i<members.size(); i++){
             String surname = members.get(i).getSurname();
             if(inputtedSurname.equals(surname)){
-                System.out.println(i+1+"."+ members.get(i).toString());
+                System.out.println("\n"+ members.get(i).toString());
                 count++;
             }
         }
@@ -640,15 +677,17 @@ public class Library {
 
     public void payFines(Member member){
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Member cannot checkout book unless outstanding fees are under £3");
+        System.out.println("CANNOT CHECKOUT BOOK UNLESS OVERDUE FEES ARE UNDER £3");
+        System.out.println(" ");
         System.out.print("Pay outstanding fees?(y/n)");
         String input = scanner.nextLine();
         if(input.equals("y")){
+            System.out.println(" ");
             System.out.print("Current balance is £"+member.getFines()+". Please enter amount paid today: ");
             double amount = scanner.nextDouble();
             member.setFines(member.getFines()-amount);
             System.out.println("Current balance is now "+member.getFines());
-            checkout2(member.getLibraryID());
+            checkout2(member);
         } else {
             optionPage();
         }

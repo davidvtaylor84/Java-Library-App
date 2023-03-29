@@ -45,4 +45,8 @@ public class Staff {
     public void setStaffPassword(String staffPassword) {
         this.staffPassword = staffPassword;
     }
+
+    public String toString(){
+        return staffID+" || "+staffFirstName+" "+staffSurname;
+    }
 }
