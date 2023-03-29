@@ -84,7 +84,7 @@ public class Library {
         System.out.println("1. Checkout Book");
         System.out.println("2. Library Collection");
         System.out.println("3. Add New Member");
-        System.out.println("4. Staff List");
+        System.out.println("4. Edit Member Details");
         System.out.println("5. Return Books");
         System.out.println("6. Logout");
         System.out.println("----------------------------------------------------");
@@ -102,7 +102,7 @@ public class Library {
                 addNewMember();
                 break;
             case 4:
-                staffList();
+                editMemberDetails();
                 break;
             case 5:
                 returnBooks();
@@ -113,6 +113,76 @@ public class Library {
             default:
                 System.out.println("Please select a number on the list of options");
                 optionPage();
+        }
+    }
+
+    private void editMemberDetails() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("");
+        System.out.print("Input Member ID:");
+        String nameOrId = scanner.nextLine();
+        if (nameOrId.equals("?")) {
+            memberSearch();
+            System.out.print("Input Number Selection: ");
+            String memberSelection = scanner.nextLine();
+            if (memberSelection.equals("q")) {
+                optionPage();
+            } else {
+                int convertedSelection = Integer.parseInt(memberSelection);
+                for(Member member : members){
+                    if(convertedSelection <= members.size()+1 && convertedSelection>0){
+                        checkout2(members.get(convertedSelection-1).getLibraryID());
+                    } else {
+                        System.out.println("Member ID not recognised");
+                    }
+                }
+            }
+        } else {
+            editMemberDetails2(nameOrId);
+        }
+    }
+
+    private void editMemberDetails2(String nameOrId) {
+        for(Member member : members){
+            if(nameOrId.equals(member.getLibraryID())){
+                Scanner scanner = new Scanner(System.in);
+                while(true){
+                    System.out.println("What do you wish to edit or q to quit?");
+                    System.out.println("1. Surname, 2. First Name, 3. Address, 4. Postcode, 5. Email, 6. Notes: ");
+                    String input = scanner.nextLine();
+                    if(input.equals("1")){
+                        System.out.print("Surname: ");
+                        String surname = scanner.nextLine();
+                        member.setSurname(surname);
+                    } else if (input.equals("2")){
+                        System.out.print("First Name: ");
+                        String firstname = scanner.nextLine();
+                        member.setFirstName(firstname);
+                    } else if(input.equals("3")){
+                        System.out.print("Address: ");
+                        String address = scanner.nextLine();
+                        member.setAddress(address);
+                    } else if(input.equals("4")){
+                        System.out.print("Postcode: ");
+                        String postcode = scanner.nextLine();
+                        member.setPostcode(postcode);
+                    } else if(input.equals("5")){
+                        System.out.print("Email: ");
+                        String email = scanner.nextLine();
+                        member.setEmail(email);
+                    } else if(input.equals("6")){
+                        System.out.print("Notes: ");
+                        String notes = scanner.nextLine();
+                        member.setNotes(notes);
+                    } else {
+                        optionPage();
+                        break;
+                    }
+                }
+            } else {
+                System.out.println("ID not recognised");
+                optionPage();
+            }
         }
     }
 
