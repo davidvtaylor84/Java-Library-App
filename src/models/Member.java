@@ -121,6 +121,6 @@ public class Member {
     }
 
     public void setFines(double fines) {
-        this.fines+=fines;
+        this.fines=fines;
     }
 }

@@ -14,19 +14,17 @@ public class Book {
     private String publisher;
     private boolean checkedOut;
     private HashMap<String, Member> loanHistory;
-    private int noOfCopies;
     private String summary;
 
     private String dueBack;
 
-    public Book(String title, String authorSurname, String authorFirstname, String isbn, String publisher, boolean checkedOut, int noOfCopies, String summary) {
+    public Book(String title, String authorSurname, String authorFirstname, String isbn, String publisher, boolean checkedOut, String summary) {
         this.title = title;
         this.authorSurname = authorSurname;
         this.authorFirstname = authorFirstname;
         this.isbn = isbn;
         this.publisher = publisher;
         this.checkedOut = checkedOut;
-        this.noOfCopies = noOfCopies;
         this.summary = summary;
         this.loanHistory = new HashMap<>();
         this.dueBack = null;
@@ -92,14 +90,6 @@ public class Book {
         loanHistory.put(date, member);
     }
 
-    public int getNoOfCopies() {
-        return noOfCopies;
-    }
-
-    public void setNoOfCopies(int noOfCopies) {
-        this.noOfCopies = noOfCopies;
-    }
-
     public String getSummary() {
         return summary;
     }
@@ -117,7 +107,7 @@ public class Book {
     }
 
     public String toString(){
-        return "\nISBN: "+isbn+"\nTITLE: "+title+"\nAUTHOR: "+authorSurname+", "+authorFirstname+"\nPUBLISHER: "+publisher+"\nSUMMARY: "+summary+"\nNO OF COPIES: "+noOfCopies+"\nCHECKED OUT: "+checkedOut+"\nDUE BACK DATE: "+dueBack+"\n\nLOAN HISTORY:\n"+loanHistory()+"\n";
+        return "\nISBN: "+isbn+"\nTITLE: "+title+"\nAUTHOR: "+authorSurname+", "+authorFirstname+"\nPUBLISHER: "+publisher+"\nSUMMARY: "+summary+"\nCHECKED OUT: "+checkedOut+"\nDUE BACK DATE: "+dueBack+"\n\nLOAN HISTORY:\n"+loanHistory()+"\n";
     }
 
     public String loanHistory(){

@@ -1,5 +1,6 @@
 package models;
 
+import java.math.BigDecimal;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -131,7 +132,7 @@ public class Library {
                 int convertedSelection = Integer.parseInt(memberSelection);
                 for(Member member : members){
                     if(convertedSelection <= members.size()+1 && convertedSelection>0){
-                        checkout2(members.get(convertedSelection-1).getLibraryID());
+                        editMemberDetails2(members.get(convertedSelection-1).getLibraryID());
                     } else {
                         System.out.println("Member ID not recognised");
                     }
@@ -154,26 +155,32 @@ public class Library {
                         System.out.print("Surname: ");
                         String surname = scanner.nextLine();
                         member.setSurname(surname);
+                        System.out.println(member);
                     } else if (input.equals("2")){
                         System.out.print("First Name: ");
                         String firstname = scanner.nextLine();
                         member.setFirstName(firstname);
+                        System.out.println(member);
                     } else if(input.equals("3")){
                         System.out.print("Address: ");
                         String address = scanner.nextLine();
                         member.setAddress(address);
+                        System.out.println(member);
                     } else if(input.equals("4")){
                         System.out.print("Postcode: ");
                         String postcode = scanner.nextLine();
                         member.setPostcode(postcode);
+                        System.out.println(member);
                     } else if(input.equals("5")){
                         System.out.print("Email: ");
                         String email = scanner.nextLine();
                         member.setEmail(email);
+                        System.out.println(member);
                     } else if(input.equals("6")){
                         System.out.print("Notes: ");
                         String notes = scanner.nextLine();
                         member.setNotes(notes);
+                        System.out.println(member);
                     } else {
                         optionPage();
                         break;
@@ -297,7 +304,14 @@ public class Library {
                                         System.out.println("");
                                         System.out.println(member);
                                     } else {
-                                        System.out.println("Book is already checked out");
+                                        System.out.println("BOOK IS ALREADY CHECKED OUT");
+                                        for(Book copy : bookCollection){
+                                            if(isbn.equals(copy.getIsbn())){
+                                                System.out.println("Due back on "+copy.getDueBack());
+                                                System.out.println("__________________________________");
+                                            }
+                                        }
+                                        checkout2(member.getLibraryID());
                                     }
                                 }
                             }
@@ -334,6 +348,7 @@ public class Library {
     }
 
     public void bookCollection(){
+        System.out.println(" ");
         System.out.println("---------------------------------------------------");
         System.out.println("COLLECTION");
         System.out.println("----------------------------------------------------");
@@ -391,8 +406,6 @@ public class Library {
         String publisher = scanner.nextLine();
         System.out.print("SUMMARY: ");
         String summary = scanner.nextLine();
-        System.out.print("NO OF COPIES: ");
-        String noOfCopies = scanner.nextLine();
         boolean checkedOut = false;
         System.out.println("");
         System.out.println("ISBN: "+ isbn);
@@ -401,12 +414,11 @@ public class Library {
         System.out.println("AUTHOR FIRSTNAME: "+firstname);
         System.out.println("PUBLISHER: "+publisher);
         System.out.println("SUMMARY: "+summary);
-        System.out.println("NO OF COPIES: "+noOfCopies);
         System.out.println(" ");
         System.out.println("Are all these details correct (y/n): ");
         String areTheseCorrect = scanner.nextLine();
         if(areTheseCorrect.equals("y")){
-            bookCollection.add(new Book(title, surname, firstname, isbn, publisher, checkedOut, Integer.parseInt(noOfCopies), summary));
+            bookCollection.add(new Book(title, surname, firstname, isbn, publisher, checkedOut, summary));
             System.out.println("Book has been added");
             bookCollection();
         } else {
@@ -457,12 +469,14 @@ public class Library {
 
     public void deleteBook(){
         Scanner scanner = new Scanner(System.in);
+        System.out.println(" ");
+        System.out.println("----------------");
         System.out.println("DELETE BOOK");
         System.out.println("--------------");
-        System.out.print("Enter title or ISBN to be deleted or q to go back: ");
+        System.out.print("Enter ISBN to be deleted or q to go back: ");
         String input = scanner.nextLine();
         for(Book book : bookCollection){
-            if(input.equals(book.getIsbn()) || input.equals(book.getTitle())){
+            if(input.equals(book.getIsbn())){
                 System.out.println(book);
                 System.out.println("");
                 System.out.print("Are you sure you want to delete this title? (y/n)");
@@ -475,14 +489,10 @@ public class Library {
                 } else {
                     bookCollection();
                 }
-            } else if (
-                input.equals("q")
-            ) {
-                bookCollection();
-            } else {
-                System.out.println("Input not recognised");
             }
         }
+        System.out.println("INCORRECT ISBN");
+        bookCollection();
     }
 
     public void searchTitles(){
@@ -559,11 +569,6 @@ public class Library {
                 LocalDate dueDate = LocalDate.parse(book.getDueBack(), formatter);
                 if (today.isAfter(dueDate)) {
                     System.out.println("Title: "+book.getTitle()+"\nISBN: "+book.getIsbn());
-//                    for(Member member : members){
-//                        if(member.listOfCheckedOutBooks().contains(book.getIsbn())){
-//                            member.setFines(fineCalculator(dueDate, today));
-//                        }
-//                    }
                     System.out.println(book.loanHistory());
                 }
             }
@@ -617,7 +622,7 @@ public class Library {
             double amount = scanner.nextDouble();
             member.setFines(member.getFines()-amount);
             System.out.println("Current balance is now "+member.getFines());
-            checkoutBook();
+            checkout2(member.getLibraryID());
         } else {
             optionPage();
         }
