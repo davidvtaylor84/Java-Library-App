@@ -173,56 +173,74 @@ public class Library {
         System.out.println("");
         System.out.print("Input Member ID:");
         String nameOrId = scanner.nextLine();
-        if(nameOrId.equals("?")){
+        if (nameOrId.equals("?")) {
             memberSearch();
-            System.out.print("Input id: ");
+            System.out.print("Input Number Selection: ");
             String memberSelection = scanner.nextLine();
-            if(memberSelection.equals("q")){
+            if (memberSelection.equals("q")) {
                 optionPage();
+            } else {
+                int convertedSelection = Integer.parseInt(memberSelection);
+                for(Member member : members){
+                    if(convertedSelection <= members.size()+1 && convertedSelection>0){
+                        checkout2(members.get(convertedSelection-1).getLibraryID());
+                    } else {
+                        System.out.println("Member ID not recognised");
+                    }
+                }
             }
+        } else {
+            checkout2(nameOrId);
+        }
+    }
+
+
+    public void checkout2(String id){
+        Scanner scanner = new Scanner(System.in);
         for (Member member : members) {
-            if (memberSelection.equals(member.getLibraryID()) || nameOrId.equals(member.getLibraryID())) {
-                System.out.println(member);
-                while (true) {
-                    System.out.println(" ");
-                    System.out.print("Checkout Book (y/n): ");
-                    String checkoutYorN = scanner.nextLine();
-                    if (checkoutYorN.equals("y")) {
-                        System.out.print("Enter ISBN or Q to quit: ");
-                        String isbn = scanner.nextLine();
-                        if (isbn.equals("Q")) {
+                if (id.equals(member.getLibraryID())) {
+                    System.out.println(member);
+                    while (true) {
+                        System.out.println(" ");
+                        System.out.print("Checkout Book (y/n): ");
+                        String checkoutYorN = scanner.nextLine();
+                        if (checkoutYorN.equals("y")) {
+                            System.out.print("Enter ISBN or Q to quit: ");
+                            String isbn = scanner.nextLine();
+                            if (isbn.equals("Q")) {
+                                optionPage();
+                                break;
+                            }
+                            for (Book book : bookCollection) {
+                                if (isbn.equals(book.getIsbn())) {
+                                    if (!book.isCheckedOut()) {
+                                        LocalDate today = LocalDate.now();
+                                        LocalDate twoWeekLoan = today.plusDays(14);
+                                        DateTimeFormatter dtf = DateTimeFormatter.ISO_LOCAL_DATE;
+                                        member.addCheckedOutBooks(book);
+                                        book.setDueBack(twoWeekLoan.format(dtf));
+                                        book.setCheckedOut(true);
+                                        book.addLoanHistory(today.format(dtf), member);
+                                        System.out.println("");
+                                        System.out.println(member);
+                                    } else {
+                                        System.out.println("Book is already checked out");
+                                    }
+                                }
+                            }
+                        } else {
+                            System.out.println("ISBN not recognised");
                             optionPage();
                             break;
                         }
-                        for (Book book : bookCollection) {
-                            if (isbn.equals(book.getIsbn())) {
-                                if (!book.isCheckedOut()) {
-                                    LocalDate today = LocalDate.now();
-                                    LocalDate twoWeekLoan = today.plusDays(14);
-                                    DateTimeFormatter dtf = DateTimeFormatter.ISO_LOCAL_DATE;
-                                    member.addCheckedOutBooks(book);
-                                    book.setDueBack(twoWeekLoan.format(dtf));
-                                    book.setCheckedOut(true);
-                                    book.addLoanHistory(today.format(dtf), member);
-                                    System.out.println("");
-                                    System.out.println(member);
-                                } else {
-                                    System.out.println("Book is already checked out");
-                                }
-                            }
-                        }
-                    } else {
-                        System.out.println("ISBN not recognised");
-                        optionPage();
-                        break;
                     }
+                } else {
+                    System.out.println("Member ID not recognised");
+                    optionPage();
                 }
-            } else {
-                System.out.println("Member ID not recognised");
-                optionPage();
             }
-        }}
-    }
+        }
+
 
     public void memberSearch(){
         Scanner scanner = new Scanner(System.in);
@@ -233,7 +251,7 @@ public class Library {
         for(int i = 0; i<members.size(); i++){
             String surname = members.get(i).getSurname();
             if(inputtedSurname.equals(surname)){
-                System.out.println(members.get(i).toString());
+                System.out.println(i+1+"."+ members.get(i).toString());
                 count++;
             }
         }
