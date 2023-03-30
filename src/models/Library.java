@@ -7,7 +7,6 @@ import java.util.stream.Collectors;
 
 public class Library {
 
-
     private List<Book> bookCollection;
     private List<Staff> libraryStaff;
     private List<Member> members;
