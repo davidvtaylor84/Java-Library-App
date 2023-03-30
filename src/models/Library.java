@@ -1,9 +1,5 @@
 package models;
 
-import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
-
-import javax.swing.plaf.synth.SynthOptionPaneUI;
-import java.math.BigDecimal;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -22,10 +18,6 @@ public class Library {
         this.members = new ArrayList<>();
     }
 
-    public List<Book> getBookCollection() {
-        return bookCollection;
-    }
-
     public void addBook(Book book) {
         bookCollection.add(book);
     }
@@ -38,35 +30,16 @@ public class Library {
         libraryStaff.add(staff);
     }
 
-    public void setBookCollection(List<Book> bookCollection) {
-        this.bookCollection = bookCollection;
-    }
-
-    public List<Staff> getLibraryStaff() {
-        return libraryStaff;
-    }
-
-    public void setLibraryStaff(List<Staff> libraryStaff) {
-        this.libraryStaff = libraryStaff;
-    }
-
-    public List<Member> getMembers() {
-        return members;
-    }
-
-    public void setMembers(List<Member> members) {
-        this.members = members;
-    }
-
     public boolean login() {
         boolean loginSuccess = false;
         while (!loginSuccess) {
             Scanner scanner = new Scanner(System.in);
+            System.out.println(" ");
             System.out.print("STAFF ID:");
             String inputID = scanner.nextLine();
             System.out.print("PASSWORD:");
             String inputPassword = scanner.nextLine();
-            System.out.println("");
+            System.out.println(" ");
             for (Staff staff : libraryStaff) {
                 if (staff.getStaffID().equals(inputID) && staff.getStaffPassword().equals(inputPassword)) {
                     loginSuccess = true;
@@ -75,7 +48,7 @@ public class Library {
             }
             if (!loginSuccess) {
                 System.out.println("Incorrect LOGIN or PASSWORD. Please try again...");
-                System.out.println("");
+                System.out.println(" ");
             }
         }
         return loginSuccess;
@@ -145,7 +118,10 @@ public class Library {
 
     private void editMemberDetails() {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("");
+        System.out.println(" ");
+        System.out.println("-----------------------");
+        System.out.println("EDIT MEMBER DETAILS");
+        System.out.println("-----------------------");
         System.out.print("Input Member ID:");
         String nameOrId = scanner.nextLine();
         if (nameOrId.equals("?")) {
@@ -156,12 +132,10 @@ public class Library {
                 optionPage();
             } else {
                 int convertedSelection = Integer.parseInt(memberSelection);
-                for (Member member : members) {
-                    if (convertedSelection <= members.size() + 1 && convertedSelection > 0) {
-                        editMemberDetails2(members.get(convertedSelection - 1).getLibraryID());
-                    } else {
-                        System.out.println("Member ID not recognised");
-                    }
+                if (convertedSelection <= members.size() + 1 && convertedSelection > 0) {
+                    editMemberDetails2(members.get(convertedSelection - 1).getLibraryID());
+                } else {
+                    System.out.println("Member ID not recognised");
                 }
             }
         } else {
@@ -173,43 +147,51 @@ public class Library {
         for (Member member : members) {
             if (nameOrId.equals(member.getLibraryID())) {
                 Scanner scanner = new Scanner(System.in);
+                label:
                 while (true) {
                     System.out.println("What do you wish to edit or q to quit?");
                     System.out.println("1. Surname, 2. First Name, 3. Address, 4. Postcode, 5. Email, 6. Notes: ");
                     String input = scanner.nextLine();
-                    if (input.equals("1")) {
-                        System.out.print("Surname: ");
-                        String surname = scanner.nextLine();
-                        member.setSurname(surname);
-                        System.out.println(member);
-                    } else if (input.equals("2")) {
-                        System.out.print("First Name: ");
-                        String firstname = scanner.nextLine();
-                        member.setFirstName(firstname);
-                        System.out.println(member);
-                    } else if (input.equals("3")) {
-                        System.out.print("Address: ");
-                        String address = scanner.nextLine();
-                        member.setAddress(address);
-                        System.out.println(member);
-                    } else if (input.equals("4")) {
-                        System.out.print("Postcode: ");
-                        String postcode = scanner.nextLine();
-                        member.setPostcode(postcode);
-                        System.out.println(member);
-                    } else if (input.equals("5")) {
-                        System.out.print("Email: ");
-                        String email = scanner.nextLine();
-                        member.setEmail(email);
-                        System.out.println(member);
-                    } else if (input.equals("6")) {
-                        System.out.print("Notes: ");
-                        String notes = scanner.nextLine();
-                        member.setNotes(notes);
-                        System.out.println(member);
-                    } else {
-                        optionPage();
-                        break;
+                    switch (input) {
+                        case "1":
+                            System.out.print("Surname: ");
+                            String surname = scanner.nextLine();
+                            member.setSurname(surname);
+                            System.out.println(member);
+                            break;
+                        case "2":
+                            System.out.print("First Name: ");
+                            String firstname = scanner.nextLine();
+                            member.setFirstName(firstname);
+                            System.out.println(member);
+                            break;
+                        case "3":
+                            System.out.print("Address: ");
+                            String address = scanner.nextLine();
+                            member.setAddress(address);
+                            System.out.println(member);
+                            break;
+                        case "4":
+                            System.out.print("Postcode: ");
+                            String postcode = scanner.nextLine();
+                            member.setPostcode(postcode);
+                            System.out.println(member);
+                            break;
+                        case "5":
+                            System.out.print("Email: ");
+                            String email = scanner.nextLine();
+                            member.setEmail(email);
+                            System.out.println(member);
+                            break;
+                        case "6":
+                            System.out.print("Notes: ");
+                            String notes = scanner.nextLine();
+                            member.setNotes(notes);
+                            System.out.println(member);
+                            break;
+                        default:
+                            optionPage();
+                            break label;
                     }
                 }
             } else {
@@ -251,9 +233,6 @@ public class Library {
                 System.out.println("ISBN not recognised");
             }
         }
-    }
-
-    private void staffList() {
     }
 
     private void addNewMember() {
@@ -342,8 +321,6 @@ public class Library {
 
     public void checkout2(Member member) {
         Scanner scanner = new Scanner(System.in);
-//        for (Member member : members) {
-//                if (id.equals(member.getLibraryID())) {
         System.out.println(member);
         if (member.getFines() >= 3.0) {
             payFines(member);
@@ -369,7 +346,7 @@ public class Library {
                             book.setDueBack(twoWeekLoan.format(dtf));
                             book.setCheckedOut(true);
                             book.addLoanHistory(today.format(dtf), member);
-                            System.out.println("");
+                            System.out.println(" ");
                             System.out.println(member);
                         } else {
                             System.out.println("BOOK IS ALREADY CHECKED OUT");
@@ -394,14 +371,14 @@ public class Library {
 
     public void memberSearch(){
         Scanner scanner = new Scanner(System.in);
-        System.out.println("");
+        System.out.println(" ");
         System.out.print("Enter Member's surname:");
         String inputtedSurname = scanner.nextLine();
         int count = 0;
         for(int i = 0; i<members.size(); i++){
             String surname = members.get(i).getSurname();
             if(inputtedSurname.equals(surname)){
-                System.out.println("\n"+ members.get(i).toString());
+                System.out.println(i+1+"."+ members.get(i).toString());
                 count++;
             }
         }
@@ -451,12 +428,13 @@ public class Library {
     }
 
     public void addBookToCollection(){
-        System.out.println("");
+        System.out.println(" ");
+        System.out.println("------------------------");
         System.out.println("ADD BOOK TO COLLECTION");
         System.out.println("------------------------");
         System.out.println("Enter details below");
         Scanner scanner = new Scanner(System.in);
-        System.out.println("");
+        System.out.println(" ");
         System.out.print("ISBN: ");
         String isbn = scanner.nextLine();
         System.out.print("TITLE: ");
@@ -470,7 +448,7 @@ public class Library {
         System.out.print("SUMMARY: ");
         String summary = scanner.nextLine();
         boolean checkedOut = false;
-        System.out.println("");
+        System.out.println(" ");
         System.out.println("ISBN: "+ isbn);
         System.out.println("TITLE: "+title);
         System.out.println("AUTHOR SURNAME: "+surname);
@@ -495,14 +473,19 @@ public class Library {
         System.out.println(" ");
         System.out.print("LIST ALL BOOKS BY (1)AUTHOR, (2)TITLE OR (3)PUBLISHER OR (q) TO GO BACK: ");
         String input = scanner.nextLine();
-        if(input.equals("1")){
-            listAllTitlesByAuthorSurname();
-        }else if(input.equals("2")) {
-            listTitlesAlphabetically();
-        } else if(input.equals("3")){
-            listByPublisher();
-        } else{
-            bookCollection();
+        switch (input) {
+            case "1":
+                listAllTitlesByAuthorSurname();
+                break;
+            case "2":
+                listTitlesAlphabetically();
+                break;
+            case "3":
+                listByPublisher();
+                break;
+            default:
+                bookCollection();
+                break;
         }
     }
 
@@ -535,18 +518,18 @@ public class Library {
         System.out.println(" ");
         System.out.println("----------------");
         System.out.println("DELETE BOOK");
-        System.out.println("--------------");
+        System.out.println("----------------");
         System.out.print("Enter ISBN to be deleted or q to go back: ");
         String input = scanner.nextLine();
         for(Book book : bookCollection){
             if(input.equals(book.getIsbn())){
                 System.out.println(book);
-                System.out.println("");
+                System.out.println(" ");
                 System.out.print("Are you sure you want to delete this title? (y/n)");
                 String confirm = scanner.nextLine();
                 if(confirm.equals("y")){
                     bookCollection.remove(book);
-                    System.out.println("");
+                    System.out.println(" ");
                     System.out.println("DELETION CONFIRMED");
                     bookCollection();
                 } else {
@@ -560,6 +543,7 @@ public class Library {
 
     public void searchTitles(){
         Scanner scanner = new Scanner(System.in);
+        System.out.println("----------------------");
         System.out.println("SEARCH TITLES");
         System.out.println("----------------------");
         System.out.println("1. Search by ISBN");
@@ -568,24 +552,30 @@ public class Library {
         System.out.println("4. Search by publisher");
         System.out.print("Please select option number or q to quit: ");
         String option = scanner.nextLine();
-        if(option.equals("1")){
-            System.out.print("ENTER ISBN: ");
-            String isbn = scanner.nextLine();
-            isbnSearch(isbn);
-        } else if (option.equals("2")) {
-            System.out.print("ENTER TITLE: ");
-            String name = scanner.nextLine();
-            bookTitleSearch(name);
-        } else if(option.equals("3")){
-            System.out.print("ENTER AUTHOR SURNAME: ");
-            String author = scanner.nextLine();
-            authorNameSearch(author);
-        } else if (option.equals("4")) {
-            System.out.println("ENTER PUBLISHER: ");
-            String publisher = scanner.nextLine();
-            publisherSearch(publisher);
-        } else {
-            bookCollection();
+        switch (option) {
+            case "1":
+                System.out.print("ENTER ISBN: ");
+                String isbn = scanner.nextLine();
+                isbnSearch(isbn);
+                break;
+            case "2":
+                System.out.print("ENTER TITLE: ");
+                String name = scanner.nextLine();
+                bookTitleSearch(name);
+                break;
+            case "3":
+                System.out.print("ENTER AUTHOR SURNAME: ");
+                String author = scanner.nextLine();
+                authorNameSearch(author);
+                break;
+            case "4":
+                System.out.println("ENTER PUBLISHER: ");
+                String publisher = scanner.nextLine();
+                publisherSearch(publisher);
+                break;
+            default:
+                bookCollection();
+                break;
         }
     }
 
@@ -692,5 +682,4 @@ public class Library {
             optionPage();
         }
     }
-
 }
